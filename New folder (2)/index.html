@@ -1,0 +1,1819 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Davipel | Sales Data System</title>
+  <!-- Global dashboard layout, components, and responsive styling. -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Sign-in and account-creation screen. -->
+  <section class="login-screen" id="loginScreen" aria-label="Staff sign-in">
+    <div class="login-story">
+      <div class="login-brand"><span class="brand-mark">D</span>Davipel</div>
+      <svg class="login-map" viewBox="0 0 500 350" aria-hidden="true">
+        <path d="M45 211 93 194 125 156 181 167 207 134 249 147 282 119 330 132 360 101 407 121 448 111M70 267 121 242 153 216 200 227 239 188 283 200 318 172 357 182 392 151 449 164M91 113 133 126 164 93 205 109 241 77 280 92 322 65 365 78 407 50M173 319 194 276 230 286 256 245 297 257 326 220 371 231 403 196 454 207"/>
+        <circle cx="207" cy="134" r="5"/>
+        <circle cx="282" cy="119" r="5"/>
+        <circle cx="360" cy="101" r="5"/>
+        <circle cx="318" cy="172" r="5"/>
+        <circle cx="239" cy="188" r="5"/>
+        <circle cx="403" cy="196" r="5"/>
+      </svg>
+      <div class="login-copy">
+        <div class="login-kicker">Sales Data System</div>
+        <h1>Every shop.<br>One clear picture.</h1>
+        <p>Place shop orders in real time, follow dispatch progress, and review order history across Zimbabwe.</p>
+      </div>
+      <div class="login-foot">DAVIPEL &nbsp;·&nbsp; SALES DATA SYSTEM</div>
+    </div>
+    <div class="login-panel">
+      <form class="login-card" id="loginForm" aria-labelledby="authTitle">
+        <div class="login-kicker">DAVIPEL STAFF PORTAL</div>
+        <h2 id="authTitle">Sign in</h2>
+        <p id="authSubtitle">Use your Davipel account credentials.</p>
+        <div id="loginFields" class="auth-fields">
+          <label for="loginEmail">
+            Email address
+            <input id="loginEmail" type="email" autocomplete="username" required placeholder="you@davipel.co.zw">
+          </label>
+          <label for="loginPassword">
+            Password
+            <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Enter your password">
+          </label>
+          <label id="legacyDepartmentLabel" for="legacyDepartment" hidden>
+            Select your department access to continue
+            <select id="legacyDepartment" disabled>
+              <option value="">Select department</option>
+              <option value="Feeds">Feeds</option>
+              <option value="Snacks">Snacks</option>
+            </select>
+          </label>
+        </div>
+        <div id="createFields" class="auth-fields" hidden>
+          <label for="accountName">
+            Full name
+            <input id="accountName" type="text" autocomplete="name" minlength="2" required placeholder="Your name">
+          </label>
+          <label for="accountEmail">
+            Work email
+            <input id="accountEmail" type="email" autocomplete="email" required placeholder="you@davipel.co.zw">
+          </label>
+          <label for="accountRole">
+            Account role
+            <select id="accountRole" required>
+              <option value="cashier">Company shop cashier</option>
+              <option value="merchant">Merchant shop operator</option>
+              <option value="merchandiser">Merchandiser / sales representative</option>
+            </select>
+          </label>
+          <label id="accountShopLabel" for="accountShop" hidden>
+            Assigned shop
+            <select id="accountShop"></select>
+          </label>
+          <label id="accountDepartmentLabel" for="accountDepartment">
+            Department access
+            <select id="accountDepartment" required>
+              <option value="">Select department</option>
+              <option value="Feeds">Feeds</option>
+              <option value="Snacks">Snacks</option>
+            </select>
+          </label>
+          <label for="accountPassword">
+            Create password
+            <input id="accountPassword" type="password" autocomplete="new-password" minlength="12" required placeholder="At least 12 characters">
+          </label>
+          <label for="accountPasswordConfirm">
+            Confirm password
+            <input id="accountPasswordConfirm" type="password" autocomplete="new-password" minlength="12" required placeholder="Re-enter password">
+          </label>
+          <label for="registrationKey">
+            Staff registration key
+            <input id="registrationKey" type="password" autocomplete="off" required placeholder="Ask your administrator">
+          </label>
+        </div>
+        <p class="auth-message" id="authMessage" role="status" aria-live="polite"></p>
+        <button class="login-submit" id="authSubmit" type="submit">Sign in</button>
+        <button class="auth-toggle" id="authToggle" type="button">Create an account</button>
+        <p class="login-hint">
+          Orders and accounts are stored on the Davipel server. Contact your administrator for staff registration access.
+        </p>
+      </form>
+    </div>
+  </section>
+  <!-- Main application shell is revealed after a successful sign-in. -->
+  <div class="shell" id="appShell" hidden>
+    <!-- Sidebar navigation, workspace identity, help, and signed-in profile. -->
+    <aside aria-label="Application sidebar">
+      <div class="brand"><span class="brand-mark">D</span>Davipel</div>
+      <div class="workspace"><div class="workspace-badge">D</div><div><small>Company</small><strong>Davipel Sales</strong></div><span class="workspace-caret" aria-hidden="true">⌄</span></div>
+      <div class="nav-label">Shop operations</div>
+      <nav class="nav" aria-label="Shop operations">
+        <button class="active" data-view="overview"><span class="ico">◫</span>Order overview</button>
+        <button data-view="sales"><span class="ico">▥</span>Sales manager</button>
+        <button id="navShopOrders" data-view="shops"><span class="ico">▤</span>Shop orders</button>
+        <button data-view="dispatch"><span class="ico">⇥</span>Dispatch queue</button>
+        <button><span class="ico">♙</span>Shops</button>
+        <button><span class="ico">◇</span>Products</button>
+      </nav>
+      <div class="nav-spacer"></div>
+      <div class="nav-label">Manage</div>
+      <nav class="nav" aria-label="Management">
+        <button><span class="ico">♧</span>Integrations</button>
+        <button><span class="ico">⚙</span>Settings</button>
+        <button id="navUserManagement" data-view="users" hidden><span class="ico">♙</span>User management</button>
+      </nav>
+      <div class="aside-bottom">
+        <div class="help">
+          <strong>Need a hand?</strong>
+          Review shop order activity by location.
+        </div>
+        <div class="profile">
+          <div class="avatar" id="profileAvatar">JD</div>
+          <div>
+            <strong id="profileName">Jordan Davis</strong>
+            <small id="profileRole">Sales manager</small>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <!-- Primary workspace containing dashboard views and order dialogs. -->
+    <main id="mainContent">
+      <div class="alert-modal" id="signOutAlert" role="alertdialog" aria-modal="true" aria-labelledby="signOutAlertTitle" aria-describedby="signOutAlertMessage" hidden>
+        <div class="alert-card" role="document">
+          <div class="alert-header">
+            <span class="alert-badge">Alert</span>
+            <button class="alert-close" id="signOutAlertClose" type="button" aria-label="Close sign-out alert">×</button>
+          </div>
+          <p class="alert-title" id="signOutAlertTitle">Sign out</p>
+          <p class="alert-message" id="signOutAlertMessage">You are about to sign out. Please confirm to continue.</p>
+          <div class="alert-actions">
+            <button class="alert-btn alert-btn-secondary" id="signOutCancel" type="button">No</button>
+            <button class="alert-btn alert-btn-primary" id="signOutConfirm" type="button">Yes</button>
+          </div>
+        </div>
+      </div>
+      <!-- Signed-in user actions and current workspace breadcrumb. -->
+      <header class="topbar" aria-label="User toolbar">
+        <div class="crumb">Davipel&nbsp; / &nbsp;<b id="breadcrumbView">Order overview</b></div>
+        <div class="top-actions">
+          <div class="signed-in-label">
+            <strong id="topName">Davipel user</strong>
+            <small id="topRole">Staff</small>
+          </div>
+          <button class="user-mode-btn" id="shopLoginButton">Place order</button>
+          <button class="signout-btn" id="signOutButton">Sign out</button>
+          <button class="icon-btn" type="button" title="Search" aria-label="Search">⌕</button>
+          <button class="icon-btn notify" type="button" title="Notifications" aria-label="Notifications">♧</button>
+          <div class="avatar top-avatar" id="topAvatar">DV</div>
+        </div>
+      </header>
+      <!-- Dashboard filters, summary metrics, charts, and activity tables. -->
+      <div class="content">
+        <section class="greeting-banner" aria-live="polite">
+          <p id="greetingMessage"></p>
+        </section>
+        <!-- Shared date, department, region, and province filters. -->
+        <section class="heading">
+          <div>
+            <div class="eyebrow">SHOP NETWORK &nbsp;·&nbsp; ORDER MONITOR</div>
+            <h1>Shop orders</h1>
+            <p>Order activity across your stores, regions, and provinces.</p>
+          </div>
+          <div class="heading-right">
+            <select id="range" class="range-select" aria-label="Order date range">
+              <option value="7">Last 7 days</option>
+              <option value="30" selected>Last 30 days</option>
+              <option value="90">Last 90 days</option>
+            </select>
+            <label class="metric-top" for="orderDate">Order date</label>
+            <input class="date-select" id="orderDate" type="date" aria-label="Select order date">
+            <button class="date-clear" id="clearDate">Rolling range</button>
+            <select id="regionFilter" class="scope-select" aria-label="Filter by region">
+              <option value="">All regions</option>
+            </select>
+            <select id="provinceFilter" class="scope-select" aria-label="Filter by province">
+              <option value="">All provinces</option>
+            </select>
+            <select id="departmentFilter" class="scope-select" aria-label="Filter by department">
+              <option value="">All departments</option>
+              <option value="Feeds">Feeds</option>
+              <option value="Snacks">Snacks</option>
+            </select>
+            <button class="export-btn" id="exportTop">↓ &nbsp;Export</button>
+          </div>
+        </section>
+        <section class="short-order-alerts" id="shortOrderAlerts" aria-labelledby="shortOrderAlertsTitle" aria-live="polite" hidden>
+          <h2 id="shortOrderAlertsTitle">Dispatch update</h2>
+          <p>Dispatch reported these orders as short. Contact dispatch to confirm which items could not be supplied.</p>
+          <ul id="shortOrderAlertList"></ul>
+        </section>
+        <section class="panel bottom role-hidden" id="userManagementPanel" aria-labelledby="userManagementTitle">
+          <div class="table-head">
+            <div class="table-heading">
+              <h2 id="userManagementTitle">User management</h2>
+              <p>View every account, add staff, or remove access.</p>
+            </div>
+          </div>
+          <div class="dialog-body">
+            <form id="managedAccountForm" class="account-admin-form">
+              <label for="managedAccountName">Full name
+                <input id="managedAccountName" type="text" minlength="2" maxlength="100" required>
+              </label>
+              <label for="managedAccountEmail">Email address
+                <input id="managedAccountEmail" type="email" required>
+              </label>
+              <label for="managedAccountPassword">Temporary password
+                <input id="managedAccountPassword" type="password" minlength="12" maxlength="256" autocomplete="new-password" required>
+              </label>
+              <label for="managedAccountRole">Account role
+                <select id="managedAccountRole" required>
+                  <option value="cashier">Company shop cashier</option>
+                  <option value="merchant">Merchant shop operator</option>
+                  <option value="merchandiser">Merchandiser / sales representative</option>
+                  <option value="dispatch">Dispatch team</option>
+                  <option value="sales">Sales manager</option>
+                  <option value="nationalSales">National sales manager</option>
+                  <option value="generalManager">General manager</option>
+                  <option value="plantManager">Plant manager</option>
+                  <option value="executive">Executive</option>
+                </select>
+              </label>
+              <label id="managedAccountDepartmentLabel" for="managedAccountDepartment">Department
+                <select id="managedAccountDepartment" required>
+                  <option value="">Select department</option>
+                  <option value="Feeds">Feeds</option>
+                  <option value="Snacks">Snacks</option>
+                </select>
+              </label>
+              <label id="managedAccountShopLabel" for="managedAccountShop" hidden>Assigned shop
+                <select id="managedAccountShop"></select>
+              </label>
+              <button class="login-submit" type="submit">Add user</button>
+              <p class="form-message account-admin-message" id="managedAccountMessage" role="status" aria-live="polite"></p>
+            </form>
+          </div>
+          <div class="table-scroll">
+            <table aria-label="Staff accounts">
+              <thead>
+                <tr><th>Name</th><th>Email</th><th>Role</th><th>Department</th><th>Assigned shop</th><th>Action</th></tr>
+              </thead>
+              <tbody id="managedAccountsRows"></tbody>
+            </table>
+          </div>
+          <div class="table-head shop-admin-heading">
+            <div class="table-heading">
+              <h2 id="shopManagementTitle">Shop management</h2>
+              <p>Add shops to the dashboard or remove them from active use. Shop IDs are assigned automatically.</p>
+            </div>
+          </div>
+          <div class="dialog-body">
+            <form id="managedShopForm" class="account-admin-form">
+              <label for="managedShopName">Shop name
+                <input id="managedShopName" type="text" minlength="2" maxlength="100" required>
+              </label>
+              <label for="managedShopDepartment">Department
+                <select id="managedShopDepartment" required>
+                  <option value="">Select department</option>
+                  <option value="Feeds">Feeds</option>
+                  <option value="Snacks">Snacks</option>
+                </select>
+              </label>
+              <label for="managedShopProvince">Province
+                <input id="managedShopProvince" type="text" minlength="2" maxlength="80" required>
+              </label>
+              <label for="managedShopRegion">Region
+                <input id="managedShopRegion" type="text" minlength="2" maxlength="80" required>
+              </label>
+              <button class="login-submit" type="submit">Add shop</button>
+              <p class="form-message account-admin-message" id="managedShopMessage" role="status" aria-live="polite"></p>
+            </form>
+          </div>
+          <div class="table-scroll">
+            <table aria-label="Shop directory">
+              <thead>
+                <tr><th>Shop</th><th>Shop ID</th><th>Department</th><th>Province</th><th>Region</th><th>Status</th><th>Action</th></tr>
+              </thead>
+              <tbody id="managedShopsRows"></tbody>
+            </table>
+          </div>
+        </section>
+        <!-- Aggregate order and shop metrics for the active filter scope. -->
+        <section class="grid" aria-label="Key metrics">
+          <article class="metric"><div class="metric-top">Orders placed <span class="metric-icon">↗</span></div><div class="metric-value" id="orders">—</div><div class="metric-foot"><span class="delta">Across selected shops</span></div></article>
+          <article class="metric"><div class="metric-top">Shops with orders <span class="metric-icon">⌑</span></div><div class="metric-value" id="shopCount">—</div><div class="metric-foot"><span>of <b id="totalShops">—</b> shops</span></div></article>
+          <article class="metric"><div class="metric-top">Leading region <span class="metric-icon">⌖</span></div><div class="metric-value" id="leadingRegion">—</div><div class="metric-foot"><span id="leadingOrders">— orders placed</span></div></article>
+          <article class="metric"><div class="metric-top">Provinces covered <span class="metric-icon">◇</span></div><div class="metric-value" id="provinceCount">—</div><div class="metric-foot"><span>with shop activity</span></div></article>
+        </section>
+        <!-- Order trend chart and regional activity breakdown. -->
+        <section class="middle" aria-label="Order analytics">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Orders over time</h2>
+                <p>Daily orders placed by shops</p>
+              </div>
+              <div class="chart-key">
+                <span class="key"><i class="dot"></i>Orders</span>
+                <span class="key"><i class="dot gray"></i>Previous period</span>
+              </div>
+            </div>
+            <div class="chartbox">
+              <canvas id="revenueChart" role="img" aria-label="Shop orders over time chart"></canvas>
+            </div>
+          </article>
+          <article class="panel channel-panel">
+            <div class="panel-head">
+              <div>
+                <h2>Orders by region</h2>
+                <p>Regional order volume</p>
+              </div>
+              <span class="province-tag" id="regionPeriod">Last 30 days</span>
+            </div>
+            <div class="region-list" id="regionList"></div>
+          </article>
+        </section>
+        <!-- Shop activity table; selecting a shop opens its order history. -->
+        <section class="panel bottom" id="shopOrdersSection" aria-labelledby="shopOrdersTitle">
+          <div class="table-head">
+            <div class="table-heading">
+              <h2 id="shopOrdersTitle">Shop order activity</h2>
+              <p>Order volume and location for each shop.</p>
+            </div>
+            <div class="table-actions">
+              <input
+                id="search"
+                class="search"
+                type="search"
+                placeholder="Search shop or province..."
+                aria-label="Search shop orders"
+              >
+            </div>
+          </div>
+          <div class="table-scroll">
+            <table aria-label="Shop order activity by location">
+              <thead>
+                <tr>
+                  <th>Shop</th>
+                  <th>Department</th>
+                  <th>Region</th>
+                  <th>Province</th>
+                  <th>Orders</th>
+                  <th>Last order</th>
+                  <th>Latest order status</th>
+                </tr>
+              </thead>
+              <tbody id="transactions"></tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <span id="rowCount"></span>
+            <nav class="pages" aria-label="Shop table pagination">
+              <button aria-label="Previous page">‹</button>
+              <button class="chosen">1</button>
+              <button aria-label="Next page">›</button>
+            </nav>
+          </div>
+        </section>
+        <!-- Regional roll-up visible to sales and management roles. -->
+        <section class="panel bottom role-panel role-hidden" id="salesPanel" aria-labelledby="salesPanelTitle">
+          <div class="panel-head">
+            <div>
+              <h2 id="salesPanelTitle">Sales manager overview</h2>
+              <p>Order volume and shop coverage by Zimbabwe region.</p>
+            </div>
+            <span class="province-tag">From order ledger</span>
+          </div>
+          <div class="table-scroll">
+            <table aria-label="Regional sales summary">
+              <thead>
+                <tr>
+                  <th>Region</th>
+                  <th>Province count</th>
+                  <th>Shops</th>
+                  <th>Orders in range</th>
+                  <th>Share</th>
+                </tr>
+              </thead>
+              <tbody id="salesRows"></tbody>
+            </table>
+          </div>
+        </section>
+        <!-- Open-order queue with inline fulfillment status controls. -->
+        <section class="panel bottom role-panel role-hidden" id="dispatchPanel" aria-labelledby="dispatchPanelTitle">
+          <div class="table-head">
+            <div class="table-heading">
+              <h2 id="dispatchPanelTitle">Dispatch queue</h2>
+              <p>Orders awaiting dispatch follow-up, including orders marked Short when the requested order cannot be fully fulfilled.</p>
+            </div>
+            <div class="table-actions">
+              <input
+                id="dispatchSearch"
+                class="search"
+                type="search"
+                placeholder="Search dispatch orders..."
+                aria-label="Search dispatch orders"
+              >
+              <span class="status pending" id="dispatchCount">0 open</span>
+            </div>
+          </div>
+          <div class="table-scroll">
+            <table class="dispatch-table" aria-label="Open orders awaiting dispatch or delivery">
+              <thead>
+                <tr>
+                  <th>Order</th>
+                  <th>Shop</th>
+                  <th>Department</th>
+                  <th>Province</th>
+                  <th>Placed</th>
+                  <th>Products</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="dispatchRows"></tbody>
+            </table>
+          </div>
+        </section>
+        <!-- Distinguish illustrative seed records from real company order data. -->
+        <div class="sample-note">DEMO SHOP LOCATIONS AND ORDERS · ZIMBABWE</div>
+        <div class="footer-note">DAVIPEL OPERATIONS &nbsp;·&nbsp; UPDATED JUST NOW</div>
+      </div>
+      <!-- Shared dialog for shop order history and individual order details. -->
+      <dialog class="detail-dialog" id="shopDialog" aria-labelledby="dialogTitle">
+        <div class="dialog-head">
+          <div>
+            <h2 id="dialogTitle">Shop orders</h2>
+            <p id="dialogSubtitle"></p>
+          </div>
+          <button class="dialog-close" id="dialogClose" aria-label="Close shop details">×</button>
+        </div>
+        <div class="dialog-body" id="dialogBody"></div>
+      </dialog>
+      <!-- Shop order-entry dialog for snacks and feed products. -->
+      <dialog class="detail-dialog" id="shopUserDialog" aria-labelledby="shopUserTitle">
+        <div class="dialog-head">
+          <div>
+            <h2 id="shopUserTitle">Place a shop order</h2>
+            <p id="shopUserSubtitle">Select Jumbo flavors and pack quantities.</p>
+          </div>
+          <button class="dialog-close" id="shopUserClose" aria-label="Close order form">×</button>
+        </div>
+        <div class="dialog-body">
+          <form id="shopOrderForm" class="shop-form">
+            <label for="userShop">
+              Assigned shop
+              <select id="userShop" required></select>
+            </label>
+            <div class="flavor-lines" id="orderItemFields"></div>
+            <p class="form-message" id="orderFormMessage" aria-live="polite"></p>
+            <button class="form-submit" type="submit">Place order</button>
+          </form>
+          <p class="sample-note">
+            Orders are saved to the Davipel server and appear in the order history and dispatch queue.
+          </p>
+        </div>
+      </dialog>
+    </main>
+  </div>
+  <script src="backend.js"></script>
+  <!-- Dashboard data, rendering, authentication, and event handlers. -->
+  <script>
+    // Business catalogue: each shop ID is unique across the Feeds and Snacks departments.
+    let shops=[
+      {shop:'Makoni Stock Feeds',id:'FEED-001',department:'Feeds',province:'Manicaland',region:'Eastern'},
+      {shop:'Mutoko Stock Feeds',id:'FEED-002',department:'Feeds',province:'Mashonaland East',region:'Eastern'},
+      {shop:'Bindura',id:'FEED-003',department:'Feeds',province:'Mashonaland Central',region:'Northern'},
+      {shop:'Chivhu',id:'FEED-004',department:'Feeds',province:'Mashonaland East',region:'Eastern'},
+      {shop:'Zvishavane',id:'FEED-005',department:'Feeds',province:'Midlands',region:'Central'},
+      {shop:'Gutu',id:'FEED-006',department:'Feeds',province:'Masvingo',region:'Southern'},
+      {shop:'Goromonzi Stock Feed Shop',id:'FEED-007',department:'Feeds',province:'Mashonaland East',region:'Eastern'},
+      {shop:'Hwedza',id:'FEED-008',department:'Feeds',province:'Mashonaland East',region:'Eastern'},
+      {shop:'Murambinda',id:'FEED-009',department:'Feeds',province:'Manicaland',region:'Eastern'},
+      {shop:'Whitehouse Stock Feeds',id:'FEED-010',department:'Feeds',province:'Harare',region:'Northern'},
+      {shop:'Jerera',id:'FEED-011',department:'Feeds',province:'Masvingo',region:'Southern'},
+      {shop:'Norton',id:'FEED-012',department:'Feeds',province:'Mashonaland West',region:'Western'},
+      {shop:'Marondera',id:'FEED-013',department:'Feeds',province:'Mashonaland East',region:'Eastern'},
+      {shop:'Showgrounds Harare',id:'FEED-014',department:'Feeds',province:'Harare',region:'Northern'},
+      {shop:'Bulawayo Warehouse',id:'FEED-015',department:'Feeds',province:'Bulawayo',region:'Western'},
+      {shop:'Bulawayo CBD',id:'FEED-016',department:'Feeds',province:'Bulawayo',region:'Western'},
+      {shop:'Dema',id:'FEED-017',department:'Feeds',province:'Mashonaland East',region:'Eastern'},
+      {shop:'Domboshava',id:'FEED-018',department:'Feeds',province:'Harare',region:'Northern'},
+      {shop:'Telesales Harare',id:'FEED-019',department:'Feeds',province:'Harare',region:'Northern'},
+      {shop:'Mvurwi',id:'FEED-020',department:'Feeds',province:'Mashonaland Central',region:'Northern'},
+      {shop:'Juru',id:'FEED-021',department:'Feeds',province:'Mashonaland East',region:'Eastern'},
+      {shop:'Mbudzi Harare',id:'FEED-022',department:'Feeds',province:'Harare',region:'Northern'},
+      {shop:'Esigodini',id:'FEED-023',department:'Feeds',province:'Matabeleland South',region:'Western'},
+      {shop:'Entumbane',id:'FEED-024',department:'Feeds',province:'Bulawayo',region:'Western'},
+      {shop:'Mutare',id:'FEED-025',department:'Feeds',province:'Manicaland',region:'Eastern'},
+      {shop:'Ngezi',id:'FEED-026',department:'Feeds',province:'Mashonaland West',region:'Western'},
+      {shop:'Tsholotsho',id:'FEED-027',department:'Feeds',province:'Matabeleland North',region:'Western'},
+      {shop:'Inyathi',id:'FEED-028',department:'Feeds',province:'Matabeleland North',region:'Western'},
+      {shop:'Mbare',id:'SNACK-001',department:'Snacks',province:'Harare',region:'Northern'},
+      {shop:'Showground Harare',id:'SNACK-002',department:'Snacks',province:'Harare',region:'Northern'},
+      {shop:'Makoni',id:'SNACK-003',department:'Snacks',province:'Manicaland',region:'Eastern'},
+      {shop:'Mbudzi Harare',id:'SNACK-004',department:'Snacks',province:'Harare',region:'Northern'},
+      {shop:'Machipisa',id:'SNACK-005',department:'Snacks',province:'Harare',region:'Northern'},
+      {shop:'Ruwa',id:'SNACK-006',department:'Snacks',province:'Mashonaland East',region:'Eastern'},
+      {shop:'Goromonzi',id:'SNACK-007',department:'Snacks',province:'Mashonaland East',region:'Eastern'},
+      {shop:'Whitehouse Harare',id:'SNACK-008',department:'Snacks',province:'Harare',region:'Northern'},
+      {shop:'Mtoko',id:'SNACK-009',department:'Snacks',province:'Mashonaland East',region:'Eastern'},
+      {shop:'Mvurwi',id:'SNACK-010',department:'Snacks',province:'Mashonaland Central',region:'Northern'},
+      {shop:'Juru',id:'SNACK-011',department:'Snacks',province:'Mashonaland East',region:'Eastern'},
+      {shop:'Telesales Harare',id:'SNACK-012',department:'Snacks',province:'Harare',region:'Northern'},
+      {shop:'BYO Cash Sales',id:'SNACK-013',department:'Snacks',province:'Bulawayo',region:'Western'},
+      {shop:'Gwanda',id:'SNACK-014',department:'Snacks',province:'Matabeleland South',region:'Western'},
+      {shop:'Esigodini',id:'SNACK-015',department:'Snacks',province:'Matabeleland South',region:'Western'},
+      {shop:'Entumbane',id:'SNACK-016',department:'Snacks',province:'Bulawayo',region:'Western'},
+      {shop:'Inyathi',id:'SNACK-017',department:'Snacks',province:'Matabeleland North',region:'Western'},
+      {shop:'Epworth',id:'SNACK-018',department:'Snacks',province:'Harare',region:'Northern'}
+    ];
+    // Shared DOM controls, current user context, and persistence keys.
+    const rows=document.getElementById('transactions');
+    const rangeSelect=document.getElementById('range');
+    const departmentFilter=document.getElementById('departmentFilter');
+    const regionFilter=document.getElementById('regionFilter');
+    const provinceFilter=document.getElementById('provinceFilter');
+    const searchInput=document.getElementById('search');
+    const dispatchSearchInput=document.getElementById('dispatchSearch');
+    const orderDateFilter=document.getElementById('orderDate');
+    orderDateFilter.value='';
+    let filteredShops=[];
+    let currentRole='sales';
+    let activeAccount=null;
+    let currentView='overview';
+    const nf=new Intl.NumberFormat('en-US');
+    const today=new Date();
+    const feedProducts=[
+      {name:'Broiler Starter Crumbs',sizes:[5,50]},
+      {name:'Broiler Grower Pellets',sizes:[10,50]},
+      {name:'Broiler Finisher Pellets',sizes:[10,50]},
+      {name:'Layer Mesh',sizes:[10,50]},
+      {name:'Layer Crumbs',sizes:[5,50]},
+      {name:'Road Runner Mesh',sizes:[10,50]},
+      {name:'Road Runner Crumbs',sizes:[5,50]}
+    ];
+    const localDate = (date) =>
+      `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    const flavorNames = ['Classic Salted', 'Cheese', 'Tomato', 'Chilli', 'BBQ'];
+    // Seed illustrative history for a new browser or a retired-shop catalogue migration.
+    function createDemoOrders(){
+      const generated=[];
+      for(let dayOffset=0;dayOffset<90;dayOffset++){
+        const date=new Date(today.getFullYear(),today.getMonth(),today.getDate()-dayOffset);
+        const dateKey=localDate(date);
+        for(const [shopIndex,shop] of shops.entries()){
+          const dailyCount=1+((shopIndex+dayOffset)%3===0?1:0);
+          for(let orderIndex=0;orderIndex<dailyCount;orderIndex++){
+            const orderNumber=dayOffset*100+shopIndex*2+orderIndex;
+            const itemCount=1+(shopIndex+dayOffset+orderIndex)%4;
+            const items=Array.from({length:itemCount},(_,itemIndex)=>{
+              const quantity=1+(shopIndex+dayOffset+itemIndex)%4;
+              if(shop.department==='Feeds'){
+                const product=feedProducts[(shopIndex+dayOffset+itemIndex)%feedProducts.length];
+                const packageSize=product.sizes[(shopIndex+dayOffset+itemIndex)%product.sizes.length];
+                return {product:product.name,packageSize,quantity};
+              }
+              return {
+                flavor:flavorNames[(shopIndex+dayOffset+itemIndex*2+orderIndex)%flavorNames.length],
+                quantity
+              };
+            });
+            const hour=9+(shopIndex+orderIndex*3)%9;
+            const minute=(shopIndex*7+orderIndex*19)%60;
+            generated.push({
+              id:`${shop.id}-D${String(orderNumber).padStart(5,'0')}`,
+              shopId:shop.id,
+              date:dateKey,
+              createdAt:`${dateKey}T${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')}:00`,
+              status:['Processing','In transit','Delivered'][(shopIndex+dayOffset+orderIndex)%3],
+              items,
+              total:shop.department==='Feeds'?null:(items.reduce((sum,item)=>sum+item.quantity,0)*2.5).toFixed(2),
+              demo:true
+            });
+          }
+        }
+      }
+      return generated;
+    }
+    const demoOrders=createDemoOrders();
+    // The server stores real orders; demo rows remain local display-only examples.
+    function readOrders(){
+      return [...demoOrders,...window.DavipelBackend.orders];
+    }
+    let orderRecords=readOrders();
+    window.addEventListener('davipel-orders-updated',()=>{
+      orderRecords=readOrders();
+      renderRows();
+    });
+    // Shared date-window and shop-scope helpers used across dashboard views.
+    function isOrderInDateRange(order,{date='',days=30}={}){
+      const start=new Date(today.getFullYear(),today.getMonth(),today.getDate()-(days-1));
+      return date
+        ?order.date===date
+        :new Date(`${order.date}T00:00:00`)>=start;
+    }
+    function getShopOrders(shopId,{date='',days=30}={}){
+      const shop=shops.find(item=>item.id===shopId);
+      if(!shop||!isShopVisibleToAccount(shop))return [];
+      return orderRecords
+        .filter(order=>order.shopId===shopId&&isOrderInDateRange(order,{date,days}))
+        .sort((a,b)=>Number(Boolean(a.demo))-Number(Boolean(b.demo))||b.createdAt.localeCompare(a.createdAt));
+    }
+    for(const region of [...new Set(shops.map(shop=>shop.region))]){
+      const option=document.createElement('option');
+      option.value=region;
+      option.textContent=region;
+      regionFilter.append(option);
+    }
+    function updateProvinceOptions(){
+      const previous=provinceFilter.value;
+      const provinceList=[...new Set(shops.filter(shop=>
+        isShopVisibleToAccount(shop)&&
+        (!regionFilter.value||shop.region===regionFilter.value)&&
+        (!departmentFilter.value||shop.department===departmentFilter.value)
+      ).map(shop=>shop.province))].sort();
+      provinceFilter.innerHTML='<option value="">All provinces</option>'+provinceList.map(province=>
+        `<option value="${escapeHtml(province)}">${escapeHtml(province)}</option>`
+      ).join('');
+      if(provinceList.includes(previous))provinceFilter.value=previous;
+    }
+    function getScopedShops(){
+      const query=searchInput.value.trim().toLowerCase();
+      const region=regionFilter.value;
+      const province=provinceFilter.value;
+      const department=departmentFilter.value;
+      const selectedDate=orderDateFilter.value;
+      const days=Number(rangeSelect.value);
+      return shops
+        .filter(shop=>
+          isShopVisibleToAccount(shop)&&
+          (!roleSettings[currentRole]?.placesOrders||shop.id===userShopSelect.value)&&
+          (!department||shop.department===department)&&
+          (!region||shop.region===region)&&
+          (!province||shop.province===province)&&
+          (!query||`${shop.shop} ${shop.id} ${shop.department} ${shop.province} ${shop.region}`.toLowerCase().includes(query))
+        )
+        .map(shop=>{
+          const matchingOrders=getShopOrders(shop.id,{date:selectedDate,days});
+          const latest=matchingOrders[0];
+          return {
+            ...shop,
+            orderCount:matchingOrders.length,
+            last:latest
+              ?new Date(`${latest.date}T00:00:00`).toLocaleDateString('en-US',{
+                month:'short',
+                day:'numeric',
+                year:'numeric'
+              })
+              :'No orders',
+            status:latest?.status||'No orders'
+          };
+        });
+    }
+    // Render shop activity and refresh dependent metrics, dispatch, and chart views.
+    function renderRows(){
+      filteredShops=getScopedShops();
+      const statusFilter=document.getElementById('statusSelect')?.value||'all';
+      const visible=filteredShops.filter(shop=>statusFilter==='all'||shop.status===statusFilter);
+      rows.innerHTML=visible.map(shop=>{
+        const initials=shop.shop
+          .split(/[\s-]+/)
+          .filter(part=>part.length>2)
+          .map(part=>part[0])
+          .slice(0,2)
+          .join('')
+          .toUpperCase();
+        const statusClass=shop.status==='Delivered'
+          ?'paid'
+          :shop.status==='In transit'
+            ?'pending'
+            :shop.status==='Short'
+              ?'short'
+            :'refunded';
+
+        return `
+          <tr data-shop-id="${escapeHtml(shop.id)}" tabindex="0" aria-label="View orders for ${escapeHtml(shop.shop)}">
+            <td>
+              <div class="customer">
+                <span class="cust-avatar">${escapeHtml(initials)}</span>
+                <span>
+                  <strong class="shop-open">${escapeHtml(shop.shop)}</strong>
+                  <small>${escapeHtml(shop.id)}</small>
+                </span>
+              </div>
+            </td>
+            <td>${escapeHtml(shop.department)}</td>
+            <td>${escapeHtml(shop.region)}</td>
+            <td>${escapeHtml(shop.province)}</td>
+            <td class="amount">${nf.format(shop.orderCount)}</td>
+            <td>${escapeHtml(shop.last)}</td>
+            <td><span class="status ${statusClass}">${escapeHtml(shop.status)}</span></td>
+          </tr>
+        `;
+      }).join('');
+      rows.querySelectorAll('tr[data-shop-id]').forEach(row=>{
+        row.addEventListener('click',()=>openShopOrders(row.dataset.shopId));
+        row.addEventListener('keydown',event=>{
+          if(event.key==='Enter'||event.key===' '){
+            event.preventDefault();
+            openShopOrders(row.dataset.shopId);
+          }
+        });
+      });
+      document.getElementById('rowCount').textContent=`Showing ${visible.length} of ${filteredShops.length} shops`;
+      renderShortOrderAlerts();
+      updateMetrics();
+      renderSalesRows();
+      renderDispatchRows();
+      drawChart();
+    }
+    const shopDialog=document.getElementById('shopDialog');
+    const dialogBody=document.getElementById('dialogBody');
+    // Shop history and individual order detail dialog rendering.
+    function openShopOrders(shopId){
+      const shop=shops.find(item=>item.id===shopId);
+      if(!shop||!isShopVisibleToAccount(shop))return;
+      document.getElementById('dialogTitle').textContent=shop.shop;
+      document.getElementById('dialogSubtitle').textContent=`${shop.department} · ${shop.id} · ${shop.province} · ${shop.region} region`;
+      const selectedDate=orderDateFilter.value;
+      const shopOrders=getShopOrders(shop.id,{date:selectedDate,days:Number(rangeSelect.value)});
+      const orderRows=shopOrders.slice(0,20);
+      const latestOrder=shopOrders[0];
+      const periodLabel=selectedDate
+        ?new Date(`${selectedDate}T00:00:00`).toLocaleDateString('en-US',{
+          month:'short',
+          day:'numeric',
+          year:'numeric'
+        })
+        :`Last ${rangeSelect.value} days`;
+      const ordersMarkup=orderRows.length
+        ?orderRows.map(order=>{
+          const placedAt=new Date(order.createdAt).toLocaleString('en-US',{
+            month:'short',
+            day:'numeric',
+            hour:'numeric',
+            minute:'2-digit'
+          });
+          const packCount=order.items.reduce((sum,item)=>sum+item.quantity,0);
+          const products=order.items.map(formatOrderItem).join(', ');
+          const statusClass=order.status==='Delivered'
+            ?'paid'
+            :order.status==='In transit'
+              ?'pending'
+              :order.status==='Short'
+                ?'short'
+              :'refunded';
+
+          return `
+            <button class="order-entry" data-order-id="${escapeHtml(order.id)}">
+              <strong>${escapeHtml(order.id)}</strong>
+              <small>${escapeHtml(placedAt)} · ${packCount} items · ${escapeHtml(products)}</small>
+              <span class="status ${statusClass}">${escapeHtml(order.status)}</span>
+            </button>
+          `;
+        }).join('')
+        :'<p>No orders found for this shop on the selected date.</p>';
+      const orderCount=shopOrders.length;
+      const latestOrderDate=latestOrder
+        ?new Date(`${latestOrder.date}T00:00:00`).toLocaleDateString('en-US',{
+          month:'short',
+          day:'numeric',
+          year:'numeric'
+        })
+        :'No orders';
+      const latestOrderStatus=latestOrder?.status||'No orders';
+      const historyNote=orderRows.some(order=>order.demo)
+        ?'Demo history is shown alongside orders saved to the Davipel server.'
+        :'Orders saved to the Davipel server update across open dashboard tabs.';
+
+      dialogBody.innerHTML=`
+        <div class="detail-summary">
+          <div class="detail-stat">
+            <small>Orders · ${periodLabel}</small>
+            <strong>${nf.format(orderCount)}</strong>
+          </div>
+          <div class="detail-stat">
+            <small>Latest order</small>
+            <strong>${latestOrderDate}</strong>
+          </div>
+          <div class="detail-stat">
+            <small>Shop status</small>
+            <strong>${escapeHtml(latestOrderStatus)}</strong>
+          </div>
+        </div>
+        <h3 class="shop-orders-heading">${escapeHtml(shop.department)} orders</h3>
+        <div class="order-list">${ordersMarkup}</div>
+        <p class="sample-note">${escapeHtml(historyNote)}</p>
+      `;
+      dialogBody.querySelectorAll('[data-order-id]').forEach(button=>{
+        button.addEventListener('click',()=>{
+          const order=orderRows.find(item=>item.id===button.dataset.orderId);
+          if(order)showOrderDetail(shop,order);
+        });
+      });
+      shopDialog.showModal();
+    }
+    function formatOrderItem(item){
+      if(item.product)return `${item.product} ${item.packageSize} kg ×${item.quantity}`;
+      return `Jumbo ${item.flavor} ×${item.quantity}`;
+    }
+    function showOrderDetail(shop,order,{backLabel=`Back to ${shop.shop} orders`,onBack=()=>openShopOrders(shop.id)}={}){
+      if(!isShopVisibleToAccount(shop))return;
+      const placedBy=order.placedBy?`${escapeHtml(order.placedBy.name)} · ${escapeHtml(order.placedBy.role)}`:order.demo?'Illustrative demo data':'Legacy shop order';
+      const packCount=order.items.reduce((sum,item)=>sum+item.quantity,0);
+      const itemsMarkup=order.items.map(item=>`<p><strong>${escapeHtml(formatOrderItem(item))}</strong></p>`).join('');
+      const placedAt=new Date(order.createdAt).toLocaleString();
+      const shortNotice=order.status==='Short'
+        ?'<p class="short-order-detail-notice">Dispatch reported this order as short. Please contact dispatch to confirm which items could not be supplied.</p>'
+        :'';
+
+      dialogBody.innerHTML=`
+        <button class="detail-back" id="backToShop">‹ &nbsp;${escapeHtml(backLabel)}</button>
+        <div class="detail-summary">
+          <div class="detail-stat">
+            <small>Order ID</small>
+            <strong>${escapeHtml(order.id)}</strong>
+          </div>
+          <div class="detail-stat">
+            <small>Order status</small>
+            <strong>${escapeHtml(order.status)}</strong>
+          </div>
+          <div class="detail-stat">
+            <small>Order items</small>
+            <strong>${packCount}</strong>
+          </div>
+        </div>
+        <div class="order-detail">
+          ${shortNotice}
+          <h3>${escapeHtml(shop.department)} products</h3>
+          ${itemsMarkup}
+          <h3 class="order-information-heading">Order information</h3>
+          <p><strong>Shop:</strong> ${escapeHtml(shop.shop)} (${escapeHtml(shop.department)}, ${escapeHtml(shop.id)})</p>
+          <p><strong>Location:</strong> ${escapeHtml(shop.province)}, Zimbabwe</p>
+          <p><strong>Placed:</strong> ${escapeHtml(placedAt)}</p>
+          <p><strong>Placed by:</strong> ${placedBy}</p>
+          <p><strong>Order value:</strong> ${order.total==null?'Not priced':`US$${escapeHtml(order.total)}`}</p>
+          <p><strong>Fulfillment:</strong> ${escapeHtml(order.status)}</p>
+        </div>
+        <p class="sample-note">${order.demo?'Illustrative demo order.':'Order stored on the Davipel server.'}</p>
+      `;
+      document.getElementById('backToShop').addEventListener('click',onBack);
+      if(!shopDialog.open)shopDialog.showModal();
+    }
+    document.getElementById('dialogClose').addEventListener('click',()=>shopDialog.close());
+    shopDialog.addEventListener('click',event=>{
+      if(event.target===shopDialog)shopDialog.close();
+    });
+    // Switch between overview, sales, shop activity, and dispatch views.
+    function setView(view,button){
+      if(view==='users'&&currentRole!=='executive')return;
+      currentView=view;
+      document.querySelectorAll('.nav button[data-view]').forEach(item=>item.classList.toggle('active',item===button));
+      document.getElementById('salesPanel').classList.toggle('role-hidden',view!=='sales');
+      document.getElementById('dispatchPanel').classList.toggle('role-hidden',view!=='dispatch');
+      document.getElementById('userManagementPanel').classList.toggle('role-hidden',view!=='users');
+      const isUsersView=view==='users';
+      document.querySelector('.greeting-banner').classList.toggle('role-hidden',isUsersView);
+      document.querySelector('.heading').classList.toggle('role-hidden',isUsersView);
+      document.querySelector('.grid').classList.toggle('role-hidden',view==='dispatch'||isUsersView);
+      document.querySelector('.middle').classList.toggle('role-hidden',view==='dispatch'||isUsersView);
+      document.getElementById('shopOrdersSection').classList.toggle('role-hidden',view==='dispatch'||isUsersView);
+      document.getElementById('breadcrumbView').textContent={overview:'Order overview',sales:'Sales overview',shops:'Shop orders',dispatch:'Dispatch queue',users:'User management'}[view]||'Order overview';
+      const target=view==='users'?'userManagementPanel':view==='dispatch'?'dispatchPanel':view==='sales'?'salesPanel':view==='shops'?'shopOrdersSection':null;
+      if(target){
+        document.getElementById(target).scrollIntoView({behavior:'smooth',block:'start'});
+      }else{
+        window.scrollTo({top:0,behavior:'smooth'});
+      }
+      if(isUsersView){
+        renderManagedAccounts();
+        renderManagedShops();
+      }
+    }
+    document.querySelectorAll('.nav button[data-view]').forEach(button=>{
+      button.addEventListener('click',()=>setView(button.dataset.view,button));
+    });
+    const shopUserDialog=document.getElementById('shopUserDialog');
+    const userShopSelect=document.getElementById('userShop');
+    function buildShopOptions(shopList=shops){
+      return '<option value="">Select shop</option>'+['Feeds','Snacks'].map(department=>
+        `<optgroup label="${department}">${shopList.filter(shop=>shop.department===department).map(shop=>
+          `<option value="${escapeHtml(shop.id)}">${escapeHtml(shop.shop)} · ${escapeHtml(shop.province)}</option>`
+        ).join('')}</optgroup>`
+      ).join('');
+    }
+    const shopOptions=buildShopOptions();
+    userShopSelect.innerHTML=shopOptions;
+    const accountShopSelect=document.getElementById('accountShop');
+    accountShopSelect.innerHTML=shopOptions;
+    const accountDepartmentSelect=document.getElementById('accountDepartment');
+    const managedRoleSelect=document.getElementById('managedAccountRole');
+    const managedDepartmentSelect=document.getElementById('managedAccountDepartment');
+    const managedShopSelect=document.getElementById('managedAccountShop');
+    const managedAccountsRows=document.getElementById('managedAccountsRows');
+    const managedAccountMessage=document.getElementById('managedAccountMessage');
+    const managedShopsRows=document.getElementById('managedShopsRows');
+    const managedShopMessage=document.getElementById('managedShopMessage');
+    const accountRoleLabels={
+      cashier:'Company shop cashier',
+      merchant:'Merchant shop operator',
+      merchandiser:'Merchandiser / sales representative',
+      dispatch:'Dispatch team',
+      sales:'Sales manager',
+      nationalSales:'National sales manager',
+      generalManager:'General manager',
+      plantManager:'Plant manager',
+      executive:'Executive'
+    };
+    function updateAccountShopOptions(){
+      const department=accountDepartmentSelect.value;
+      const availableShops=shops.filter(shop=>!department||shop.department===department);
+      accountShopSelect.innerHTML='<option value="">Select shop</option>'+['Feeds','Snacks']
+        .filter(group=>!department||group===department)
+        .map(group=>`<optgroup label="${group}">${availableShops.filter(shop=>shop.department===group).map(shop=>
+          `<option value="${escapeHtml(shop.id)}">${escapeHtml(shop.shop)} · ${escapeHtml(shop.province)}</option>`
+        ).join('')}</optgroup>`).join('');
+    }
+    function updateManagedAccountFields(){
+      const role=managedRoleSelect.value;
+      const isExecutive=role==='executive';
+      const needsAssignedShop=role==='cashier'||role==='merchant';
+      document.getElementById('managedAccountDepartmentLabel').hidden=isExecutive;
+      managedDepartmentSelect.required=!isExecutive;
+      managedDepartmentSelect.disabled=isExecutive;
+      if(isExecutive)managedDepartmentSelect.value='';
+      document.getElementById('managedAccountShopLabel').hidden=isExecutive||!needsAssignedShop;
+      managedShopSelect.required=needsAssignedShop;
+      managedShopSelect.disabled=isExecutive||!needsAssignedShop;
+      const department=managedDepartmentSelect.value;
+      const previous=managedShopSelect.value;
+      const eligibleShops=shops.filter(shop=>!department||shop.department===department);
+      managedShopSelect.innerHTML='<option value="">Select shop</option>'+['Feeds','Snacks']
+        .filter(group=>!department||group===department)
+        .map(group=>`<optgroup label="${group}">${eligibleShops.filter(shop=>shop.department===group).map(shop=>
+          `<option value="${escapeHtml(shop.id)}">${escapeHtml(shop.shop)} · ${escapeHtml(shop.province)}</option>`
+        ).join('')}</optgroup>`).join('');
+      if(eligibleShops.some(shop=>shop.id===previous))managedShopSelect.value=previous;
+    }
+    async function renderManagedAccounts(){
+      if(currentRole!=='executive')return;
+      managedAccountsRows.replaceChildren();
+      try{
+        const accounts=await window.DavipelBackend.listAccounts();
+        for(const account of accounts){
+          const row=document.createElement('tr');
+          const shop=shops.find(item=>item.id===account.shopId);
+          const values=[
+            account.name,
+            account.email,
+            accountRoleLabels[account.role]||account.role,
+            account.department||'All departments',
+            shop?`${shop.shop} (${shop.id})`:'—'
+          ];
+          for(const value of values){
+            const cell=document.createElement('td');
+            cell.textContent=value;
+            row.append(cell);
+          }
+          const actionCell=document.createElement('td');
+          const removeButton=document.createElement('button');
+          removeButton.type='button';
+          removeButton.className='account-remove-btn';
+          removeButton.textContent='Remove';
+          removeButton.disabled=account.id===activeAccount?.id;
+          removeButton.setAttribute('aria-label',`Remove ${account.name}`);
+          removeButton.addEventListener('click',async()=>{
+            if(!window.confirm(`Remove ${account.name}'s account? Their active sessions will be revoked.`))return;
+            removeButton.disabled=true;
+            managedAccountMessage.textContent='';
+            try{
+              await window.DavipelBackend.removeAccount(account.id);
+              await renderManagedAccounts();
+              managedAccountMessage.textContent=`Removed ${account.name}'s account.`;
+            }catch(error){
+              managedAccountMessage.textContent=error.message||'Could not remove this account.';
+              removeButton.disabled=false;
+            }
+          });
+          actionCell.append(removeButton);
+          row.append(actionCell);
+          managedAccountsRows.append(row);
+        }
+        if(!accounts.length){
+          const row=document.createElement('tr');
+          const cell=document.createElement('td');
+          cell.colSpan=6;
+          cell.textContent='No staff accounts found.';
+          row.append(cell);
+          managedAccountsRows.append(row);
+        }
+      }catch(error){
+        managedAccountMessage.textContent=error.message||'Could not load staff accounts.';
+      }
+    }
+    async function refreshShopCatalog(){
+      const previousShop=userShopSelect.value;
+      shops=await window.DavipelBackend.listShops();
+      userShopSelect.innerHTML=buildShopOptions();
+      if(shops.some(shop=>shop.id===previousShop))userShopSelect.value=previousShop;
+      if(activeAccount?.shopId){
+        userShopSelect.value=activeAccount.shopId;
+        userShopSelect.disabled=true;
+      }
+      updateAccountShopOptions();
+      updateManagedAccountFields();
+      const selectedRegion=regionFilter.value;
+      regionFilter.innerHTML='<option value="">All regions</option>'+[...new Set(shops.map(shop=>shop.region))]
+        .sort()
+        .map(region=>`<option value="${escapeHtml(region)}">${escapeHtml(region)}</option>`).join('');
+      if(shops.some(shop=>shop.region===selectedRegion))regionFilter.value=selectedRegion;
+      updateProvinceOptions();
+      renderOrderItemFields();
+      renderRows();
+    }
+    async function renderManagedShops(){
+      if(currentRole!=='executive')return;
+      managedShopsRows.replaceChildren();
+      try{
+        const shopList=await window.DavipelBackend.listShops(true);
+        for(const shop of shopList){
+          const row=document.createElement('tr');
+          for(const value of [shop.shop,shop.id,shop.department,shop.province,shop.region,shop.active?'Active':'Removed']){
+            const cell=document.createElement('td');
+            cell.textContent=value;
+            row.append(cell);
+          }
+          const actionCell=document.createElement('td');
+          const actionButton=document.createElement('button');
+          actionButton.type='button';
+          actionButton.className=shop.active?'account-remove-btn':'shop-restore-btn';
+          actionButton.textContent=shop.active?'Remove':'Restore';
+          actionButton.setAttribute('aria-label',`${shop.active?'Remove':'Restore'} ${shop.shop}`);
+          actionButton.addEventListener('click',async()=>{
+            actionButton.disabled=true;
+            managedShopMessage.textContent='';
+            try{
+              if(shop.active){
+                if(!window.confirm(`Remove ${shop.shop} from active use? Its order history will be retained.`))return;
+                await window.DavipelBackend.removeShop(shop.id);
+              }else{
+                await window.DavipelBackend.restoreShop(shop.id);
+              }
+              await refreshShopCatalog();
+              await renderManagedShops();
+              managedShopMessage.textContent=shop.active
+                ?`${shop.shop} was removed from active shops.`
+                :`${shop.shop} was restored.`;
+            }catch(error){
+              managedShopMessage.textContent=error.message||'Could not update this shop.';
+            }finally{actionButton.disabled=false}
+          });
+          actionCell.append(actionButton);
+          row.append(actionCell);
+          managedShopsRows.append(row);
+        }
+        if(!shopList.length){
+          const row=document.createElement('tr');
+          const cell=document.createElement('td');
+          cell.colSpan=7;
+          cell.textContent='No shops found.';
+          row.append(cell);
+          managedShopsRows.append(row);
+        }
+      }catch(error){
+        managedShopMessage.textContent=error.message||'Could not load shops.';
+      }
+    }
+    document.getElementById('managedShopForm').addEventListener('submit',async event=>{
+      event.preventDefault();
+      const form=event.currentTarget;
+      const submit=form.querySelector('[type="submit"]');
+      submit.disabled=true;
+      managedShopMessage.textContent='';
+      try{
+        const shop=await window.DavipelBackend.createShop({
+          shop:document.getElementById('managedShopName').value.trim(),
+          department:document.getElementById('managedShopDepartment').value,
+          province:document.getElementById('managedShopProvince').value.trim(),
+          region:document.getElementById('managedShopRegion').value.trim()
+        });
+        form.reset();
+        await refreshShopCatalog();
+        await renderManagedShops();
+        managedShopMessage.textContent=`Added ${shop.shop} (${shop.id}).`;
+      }catch(error){
+        managedShopMessage.textContent=error.message||'Could not add this shop.';
+      }finally{submit.disabled=false}
+    });
+    managedRoleSelect.addEventListener('change',updateManagedAccountFields);
+    managedDepartmentSelect.addEventListener('change',updateManagedAccountFields);
+    updateManagedAccountFields();
+    document.getElementById('managedAccountForm').addEventListener('submit',async event=>{
+      event.preventDefault();
+      const form=event.currentTarget;
+      const submit=form.querySelector('[type="submit"]');
+      submit.disabled=true;
+      managedAccountMessage.textContent='';
+      try{
+        const account=await window.DavipelBackend.createAccount({
+          name:document.getElementById('managedAccountName').value.trim(),
+          email:document.getElementById('managedAccountEmail').value.trim().toLowerCase(),
+          password:document.getElementById('managedAccountPassword').value,
+          role:managedRoleSelect.value,
+          department:managedDepartmentSelect.value||null,
+          shopId:managedShopSelect.value||null
+        });
+        form.reset();
+        updateManagedAccountFields();
+        managedAccountMessage.textContent=`Created ${account.name}'s account. Share the temporary password securely.`;
+        await renderManagedAccounts();
+      }catch(error){
+        managedAccountMessage.textContent=error.message||'Could not create this account.';
+      }finally{submit.disabled=false}
+    });
+    // Build the correct order-line fields for the selected department.
+    function renderOrderItemFields(){
+      const shop=shops.find(item=>item.id===userShopSelect.value);
+      const lines=shop?.department==='Feeds'
+        ?Array.from({length:3},()=>`
+          <div class="flavor-line feed-line">
+            <select class="product-select" aria-label="Feed product">
+              <option value="">Select feed product</option>
+              ${feedProducts.map(product=>`<option value="${product.name}">${product.name}</option>`).join('')}
+            </select>
+            <select class="package-select" aria-label="Package size" disabled>
+              <option value="">kg</option>
+            </select>
+            <input class="flavor-quantity" type="number" min="0" max="500" value="0" aria-label="Bag quantity">
+          </div>
+        `).join('')
+        :Array.from({length:3},()=>`
+          <div class="flavor-line">
+            <select class="flavor-select" aria-label="Jumbo flavor">
+              <option value="">Select Jumbo flavor</option>
+              ${flavorNames.map(flavor=>`<option value="${flavor}">${flavor}</option>`).join('')}
+            </select>
+            <input class="flavor-quantity" type="number" min="0" max="500" value="0" aria-label="Pack quantity">
+          </div>
+        `).join('');
+      document.getElementById('orderItemFields').innerHTML=lines;
+      document.getElementById('shopUserSubtitle').textContent=shop?.department==='Feeds'
+        ?'Select feed products, bag sizes, and quantities. Feed orders are not priced.'
+        :'Select Jumbo flavors and pack quantities.';
+      document.getElementById('orderItemFields').querySelectorAll('.product-select').forEach(select=>{
+        select.addEventListener('change',event=>{
+          const product=feedProducts.find(item=>item.name===event.currentTarget.value);
+          const packageSelect=event.currentTarget.closest('.flavor-line').querySelector('.package-select');
+          packageSelect.innerHTML=`<option value="">Select size</option>${(product?.sizes||[]).map(size=>
+            `<option value="${escapeHtml(size)}">${escapeHtml(size)} kg</option>`
+          ).join('')}`;
+          packageSelect.disabled=!product;
+        });
+      });
+    }
+    // Role capabilities determine initial view and permission to place shop orders.
+    const roleSettings={
+      cashier:{label:'Company shop cashier',view:'shops',placesOrders:true},
+      merchant:{label:'Merchant shop operator',view:'shops',placesOrders:true},
+      merchandiser:{label:'Merchandiser / sales representative',view:'shops',placesOrders:true},
+      shop:{label:'Shop user',view:'shops',placesOrders:true},
+      dispatch:{label:'Dispatch team',view:'dispatch'},
+      sales:{label:'Sales manager',view:'sales'},
+      nationalSales:{label:'National sales manager',view:'sales'},
+      generalManager:{label:'General manager',view:'sales'},
+      plantManager:{label:'Plant manager',view:'sales'},
+      executive:{label:'Executive',view:'sales'}
+    };
+    function getAccountDepartment(){
+      if(!activeAccount||currentRole==='executive')return '';
+      return activeAccount.department||shops.find(shop=>shop.id===activeAccount.shopId)?.department||'';
+    }
+    function isShopVisibleToAccount(shop){
+      if(!activeAccount||currentRole==='executive')return true;
+      const department=getAccountDepartment();
+      return Boolean(department&&shop.department===department&&
+        (!roleSettings[currentRole]?.placesOrders||!activeAccount.shopId||shop.id===activeAccount.shopId));
+    }
+    function updateAccountAccessFields(isCreating){
+      const role=roleSettings[document.getElementById('accountRole').value];
+      const isExecutive=document.getElementById('accountRole').value==='executive';
+      const isShopRole=Boolean(role?.placesOrders);
+      document.getElementById('accountDepartmentLabel').hidden=isExecutive;
+      accountDepartmentSelect.disabled=!isCreating||isExecutive;
+      accountDepartmentSelect.required=isCreating&&!isExecutive;
+      document.getElementById('accountShopLabel').hidden=!isShopRole;
+      accountShopSelect.disabled=!isCreating||!isShopRole;
+      accountShopSelect.required=isCreating&&isShopRole;
+      if(isExecutive)accountDepartmentSelect.value='';
+      updateAccountShopOptions();
+    }
+    // The server handles account storage, password hashing, and session authentication.
+    function initialsFor(name){
+      return name.trim().split(/\s+/).slice(0,2).map(part=>part[0]).join('').toUpperCase();
+    }
+    function escapeHtml(value){
+      const entities={
+        '&':'&amp;',
+        '<':'&lt;',
+        '>':'&gt;',
+        '"':'&quot;',
+        "'":'&#39;'
+      };
+      return String(value).replace(/[&<>"']/g,character=>entities[character]);
+    }
+    document.getElementById('shopLoginButton').classList.add('role-hidden');
+    function activateProfile(role,{openShopForm=false}={}){
+      const profile=roleSettings[role.role];
+      if(!profile)throw new Error('This account has an unsupported role. Create a new account or contact an administrator.');
+      if(role.role!=='executive'&&!['Feeds','Snacks'].includes(role.department)){
+        throw new Error('This account must be assigned Feeds or Snacks department access.');
+      }
+      currentRole=role.role;
+      activeAccount=role;
+      document.getElementById('navUserManagement').hidden=role.role!=='executive';
+      const department=getAccountDepartment();
+      const assignedShop=shops.find(shop=>shop.id===role.shopId);
+      if(profile.placesOrders&&assignedShop&&assignedShop.department!==department){
+        throw new Error('The assigned shop must match this account’s department access.');
+      }
+      const scopedShops=department?shops.filter(shop=>shop.department===department):shops;
+      userShopSelect.innerHTML='<option value="">Select shop</option>'+['Feeds','Snacks']
+        .filter(group=>!department||group===department)
+        .map(group=>`<optgroup label="${group}">${scopedShops.filter(shop=>shop.department===group).map(shop=>
+          `<option value="${escapeHtml(shop.id)}">${escapeHtml(shop.shop)} · ${escapeHtml(shop.province)}</option>`
+        ).join('')}</optgroup>`).join('');
+      const canPlaceOrders=Boolean(profile.placesOrders);
+      if(canPlaceOrders){
+        const assignedShop=shops.find(shop=>shop.id===role.shopId);
+        userShopSelect.value=assignedShop?.id||'';
+        userShopSelect.disabled=Boolean(assignedShop);
+        renderOrderItemFields();
+      }
+      document.getElementById('profileName').textContent=role.name;
+      document.getElementById('profileRole').textContent=profile.label;
+      document.getElementById('profileAvatar').textContent=initialsFor(role.name);
+      document.getElementById('topAvatar').textContent=initialsFor(role.name);
+      document.getElementById('topName').textContent=role.name;
+      document.getElementById('topRole').textContent=department?`${profile.label} · ${department}`:profile.label;
+      const hour=new Date().getHours();
+      const timeGreeting=hour<12?'Good morning':hour<17?'Good afternoon':'Good evening';
+      document.getElementById('greetingMessage').textContent=`${timeGreeting}, ${role.name}!`;
+      document.getElementById('shopLoginButton').classList.toggle('role-hidden',!canPlaceOrders);
+      document.getElementById('shopLoginButton').textContent='Place order';
+      departmentFilter.value=department;
+      departmentFilter.disabled=Boolean(department);
+      regionFilter.value='';
+      provinceFilter.value='';
+      updateProvinceOptions();
+      renderRows();
+      document.getElementById('loginScreen').hidden=true;
+      document.getElementById('appShell').hidden=false;
+      setView(profile.view,document.querySelector(`.nav button[data-view="${profile.view}"]`));
+      if(canPlaceOrders&&openShopForm)shopUserDialog.showModal();
+    }
+    let authMode='login';
+    const loginFields=document.getElementById('loginFields');
+    const createFields=document.getElementById('createFields');
+    const legacyDepartmentLabel=document.getElementById('legacyDepartmentLabel');
+    const legacyDepartmentSelect=document.getElementById('legacyDepartment');
+    function setAuthMode(mode){
+      authMode=mode;
+      loginFields.hidden=mode!=='login';
+      createFields.hidden=mode!=='create';
+      for(const field of loginFields.querySelectorAll('input,select'))field.disabled=mode!=='login'||(field===legacyDepartmentSelect&&legacyDepartmentLabel.hidden);
+      for(const field of createFields.querySelectorAll('input,select'))field.disabled=mode!=='create';
+      const isCreating=mode==='create';
+      document.getElementById('authTitle').textContent=isCreating?'Create your account':'Sign in';
+      document.getElementById('authSubtitle').textContent=isCreating?'Set up your Davipel team access.':'Use your Davipel account credentials.';
+      document.getElementById('authSubmit').textContent=isCreating?'Create account':'Sign in';
+      document.getElementById('authToggle').textContent=isCreating?'Back to sign in':'Create an account';
+      document.getElementById('authMessage').textContent='';
+      updateAccountAccessFields(isCreating);
+    }
+    setAuthMode('login');
+    document.getElementById('authToggle').addEventListener('click',()=>setAuthMode(authMode==='login'?'create':'login'));
+    document.getElementById('accountRole').addEventListener('change',()=>updateAccountAccessFields(authMode==='create'));
+    accountDepartmentSelect.addEventListener('change',updateAccountShopOptions);
+    // Sign-in and account creation.
+    document.getElementById('loginForm').addEventListener('submit',async event=>{
+      event.preventDefault();
+      const form=event.currentTarget;
+      const message=document.getElementById('authMessage');
+      const submit=document.getElementById('authSubmit');
+      submit.disabled=true;
+      message.textContent='';
+      try{
+        if(authMode==='create'){
+          const name=document.getElementById('accountName').value.trim();
+          const email=document.getElementById('accountEmail').value.trim().toLowerCase();
+          const password=document.getElementById('accountPassword').value;
+          const confirmation=document.getElementById('accountPasswordConfirm').value;
+          const role=document.getElementById('accountRole').value;
+          const department=accountDepartmentSelect.value;
+          if(password.length<12){message.textContent='Use a password with at least 12 characters.';return}
+          if(password!==confirmation){message.textContent='The password confirmation does not match.';return}
+          if(!['Feeds','Snacks'].includes(department)){
+            message.textContent='Choose Feeds or Snacks department access for this account.';
+            return;
+          }
+          if(roleSettings[role]?.placesOrders&&accountShopSelect.value&&!shops.some(shop=>
+            shop.id===accountShopSelect.value&&shop.department===department
+          )){
+            message.textContent='Choose an assigned shop from the selected department.';
+            return;
+          }
+          const user=await window.DavipelBackend.register({
+            name,
+            email,
+            password,
+            role,
+            department,
+            shopId:accountShopSelect.value||null,
+            registrationKey:document.getElementById('registrationKey').value
+          });
+          await refreshShopCatalog();
+          orderRecords=readOrders();
+          document.getElementById('loginEmail').value=email;
+          document.getElementById('loginPassword').value='';
+          form.reset();
+          setAuthMode('login');
+          activateProfile(user,{openShopForm:Boolean(roleSettings[role]?.placesOrders)});
+          return;
+        }
+        const email=document.getElementById('loginEmail').value.trim().toLowerCase();
+        const password=document.getElementById('loginPassword').value;
+        const user=await window.DavipelBackend.login(email,password);
+        await refreshShopCatalog();
+        orderRecords=readOrders();
+        legacyDepartmentLabel.hidden=true;
+        legacyDepartmentSelect.disabled=true;
+        legacyDepartmentSelect.required=false;
+        legacyDepartmentSelect.value='';
+        activateProfile(user,{openShopForm:Boolean(roleSettings[user.role]?.placesOrders)});
+      }catch(error){
+        message.textContent=error.message||'Could not connect to the Davipel server.';
+      }finally{submit.disabled=false}
+    });
+    const signOutAlert=document.getElementById('signOutAlert');
+    const signOutConfirm=document.getElementById('signOutConfirm');
+    const signOutCancel=document.getElementById('signOutCancel');
+    const signOutAlertClose=document.getElementById('signOutAlertClose');
+    function closeSignOutAlert(){
+      signOutAlert.hidden=true;
+    }
+    function signOutUser(){
+      shopDialog.close();
+      shopUserDialog.close();
+      document.getElementById('loginForm').reset();
+      setAuthMode('login');
+      activeAccount=null;
+      orderRecords=readOrders();
+      document.getElementById('appShell').hidden=true;
+      document.getElementById('loginScreen').hidden=false;
+      window.scrollTo({top:0,behavior:'instant'});
+    }
+    signOutAlert.addEventListener('click',event=>{
+      if(event.target===signOutAlert)closeSignOutAlert();
+    });
+    signOutAlertClose.addEventListener('click',closeSignOutAlert);
+    signOutCancel.addEventListener('click',closeSignOutAlert);
+    signOutConfirm.addEventListener('click',async()=>{
+      signOutConfirm.disabled=true;
+      try{
+        await window.DavipelBackend.logout();
+        closeSignOutAlert();
+        signOutUser();
+      }catch(error){
+        document.getElementById('signOutAlertMessage').textContent=error.message||'Could not sign out from the server.';
+      }finally{signOutConfirm.disabled=false}
+    });
+    document.getElementById('signOutButton').addEventListener('click',()=>{
+      signOutAlert.hidden=false;
+      signOutConfirm.focus();
+    });
+    document.getElementById('shopLoginButton').addEventListener('click',()=>shopUserDialog.showModal());
+    userShopSelect.addEventListener('change',renderOrderItemFields);
+    document.getElementById('shopUserClose').addEventListener('click',()=>shopUserDialog.close());
+    shopUserDialog.addEventListener('click',event=>{
+      if(event.target===shopUserDialog)shopUserDialog.close();
+    });
+    // Validate and save a snack or feed order, then refresh the shop history.
+    document.getElementById('shopOrderForm').addEventListener('submit',async event=>{
+      event.preventDefault();
+      const message=document.getElementById('orderFormMessage');
+      const shop=shops.find(item=>item.id===userShopSelect.value);
+      if(!shop||!activeAccount||!roleSettings[currentRole]?.placesOrders){
+        message.textContent='Choose a valid shop assigned to your account before placing an order.';
+        return;
+      }
+      if(!isShopVisibleToAccount(shop)){
+        message.textContent='You can only place orders for your assigned shop and department.';
+        return;
+      }
+      const itemsByProduct=new Map();
+      for(const line of event.currentTarget.querySelectorAll('.flavor-line')){
+        const productSelect=line.querySelector('.product-select');
+        const flavorSelect=line.querySelector('.flavor-select');
+        const product=productSelect?.value||'';
+        const packageSize=Number(line.querySelector('.package-select')?.value||0);
+        const flavor=flavorSelect?.value||'';
+        const quantity=Number(line.querySelector('.flavor-quantity').value);
+        if(quantity===0)continue;
+        if(shop.department==='Feeds'&&(!product||!packageSize)){
+          message.textContent='Choose a feed product and bag size for every quantity entered.';
+          return;
+        }
+        if(shop.department==='Snacks'&&!flavor){
+          message.textContent='Choose a Jumbo flavor for every quantity entered.';
+          return;
+        }
+        if(!Number.isInteger(quantity)||quantity<1||quantity>500){
+          message.textContent='Each quantity must be a whole number from 1 to 500.';
+          return;
+        }
+        const key=shop.department==='Feeds'?`${product}|${packageSize}`:flavor;
+        const existing=itemsByProduct.get(key);
+        itemsByProduct.set(key,{
+          ...(shop.department==='Feeds'?{product,packageSize}:{flavor}),
+          quantity:(existing?.quantity||0)+quantity
+        });
+      }
+      const items=[...itemsByProduct.values()];
+      if(!items.length){
+        message.textContent=shop.department==='Feeds'
+          ?'Choose at least one feed product, bag size, and quantity.'
+          :'Choose at least one flavor and enter a pack quantity.';
+        return;
+      }
+      if(items.some(item=>item.quantity>500)){
+        message.textContent='The combined quantity for each product must not exceed 500.';
+        return;
+      }
+      const submit=event.currentTarget.querySelector('[type="submit"]');
+      submit.disabled=true;
+      try{
+        const order=await window.DavipelBackend.createOrder(shop.id,items);
+        activeAccount=window.DavipelBackend.currentUser;
+        if(activeAccount.shopId){
+          userShopSelect.value=activeAccount.shopId;
+          userShopSelect.disabled=true;
+        }
+        orderRecords=readOrders();
+        orderDateFilter.value=order.date;
+        rangeSelect.value='30';
+        renderRows();
+        shopUserDialog.close();
+        event.currentTarget.reset();
+        renderOrderItemFields();
+        message.textContent='';
+        openShopOrders(shop.id);
+      }catch(error){
+        message.textContent=`Could not save this order: ${error.message}`;
+      }finally{submit.disabled=false}
+    });
+    document.getElementById('clearDate').addEventListener('click',()=>{
+      orderDateFilter.value='';
+      renderRows();
+    });
+    // Management reporting and dispatch queue rendering.
+    function renderSalesRows(){
+      const totals={};
+      for(const shop of filteredShops){
+        const group=totals[shop.region]||{shops:0,provinces:new Set(),orders:0};
+        group.shops++;
+        group.provinces.add(shop.province);
+        group.orders+=shop.orderCount;
+        totals[shop.region]=group;
+      }
+      const total=Object.values(totals).reduce((sum,group)=>sum+group.orders,0);
+      document.getElementById('salesRows').innerHTML=Object.entries(totals)
+        .sort((a,b)=>b[1].orders-a[1].orders)
+        .map(([region,group])=>`
+          <tr>
+            <td>${escapeHtml(region)}</td>
+            <td>${group.provinces.size}</td>
+            <td>${group.shops}</td>
+            <td class="amount">${nf.format(group.orders)}</td>
+            <td>${total?Math.round(group.orders/total*100):0}%</td>
+          </tr>
+        `).join('');
+    }
+    function renderDispatchRows(){
+      const scopedShopIds=new Set(getScopedShops().map(shop=>shop.id));
+      const date=orderDateFilter.value;
+      const days=Number(rangeSelect.value);
+      const openOrders=orderRecords
+        .filter(order=>
+          order.status!=='Delivered'&&
+          scopedShopIds.has(order.shopId)&&
+          isOrderInDateRange(order,{date,days})
+        )
+        .sort((a,b)=>Number(Boolean(a.demo))-Number(Boolean(b.demo))||b.createdAt.localeCompare(a.createdAt))
+        .slice(0,50);
+      document.getElementById('dispatchCount').textContent=`${openOrders.length} active`;
+      document.getElementById('dispatchRows').innerHTML=openOrders.map(order=>{
+        const shop=shops.find(item=>item.id===order.shopId);
+        const items=order.items.map(formatOrderItem).join(', ');
+        const placedAt=new Date(order.createdAt).toLocaleString('en-US',{
+          month:'short',
+          day:'numeric',
+          hour:'numeric',
+          minute:'2-digit'
+        });
+        const statuses=['Processing','Packed','In transit','Delivered','Short'].map(status=>`
+          <option ${order.status===status?'selected':''}>${escapeHtml(status)}</option>
+        `).join('');
+
+        return `
+          <tr>
+            <td><button class="order-open" type="button" data-order-id="${escapeHtml(order.id)}" aria-label="View order ${escapeHtml(order.id)}">${escapeHtml(order.id)}</button></td>
+            <td>${escapeHtml(shop?.shop||order.shopId)}</td>
+            <td>${escapeHtml(shop?.department||'')}</td>
+            <td>${escapeHtml(shop?.province||'')}</td>
+            <td>${escapeHtml(placedAt)}</td>
+            <td>${escapeHtml(items)}</td>
+            <td>
+              <select class="dispatch-status" data-order-id="${escapeHtml(order.id)}" aria-label="Update status for ${escapeHtml(order.id)}" ${order.demo?'disabled':''}>
+                ${statuses}
+              </select>
+            </td>
+          </tr>
+        `;
+      }).join('');
+      document.querySelectorAll('#dispatchRows .order-open').forEach(button=>button.addEventListener('click',()=>{
+        const order=orderRecords.find(item=>item.id===button.dataset.orderId);
+        if(!order)return;
+        const shop=shops.find(item=>item.id===order.shopId)||{
+          shop:order.shopId,
+          id:order.shopId,
+          department:order.items.some(item=>item.product)?'Feeds':'Snacks',
+          province:'Unknown'
+        };
+        showOrderDetail(shop,order,{
+          backLabel:'Back to dispatch queue',
+          onBack:()=>shopDialog.close()
+        });
+      }));
+      document.querySelectorAll('.dispatch-status').forEach(select=>select.addEventListener('change',async event=>{
+        const order=orderRecords.find(item=>item.id===event.target.dataset.orderId);
+        if(order){
+          const previousStatus=order.status;
+          event.target.disabled=true;
+          try{
+            await window.DavipelBackend.updateOrderStatus(order.id,event.target.value);
+            orderRecords=readOrders();
+            renderRows();
+          }catch(error){
+            event.target.value=previousStatus;
+            window.alert(`Could not update order status: ${error.message}`);
+          }finally{event.target.disabled=false}
+        }
+      }));
+    }
+    function renderShortOrderAlerts(){
+      const alertPanel=document.getElementById('shortOrderAlerts');
+      const alertList=document.getElementById('shortOrderAlertList');
+      const shopId=roleSettings[currentRole]?.placesOrders?userShopSelect.value:'';
+      const shortOrders=orderRecords
+        .filter(order=>order.shopId===shopId&&order.status==='Short')
+        .sort((a,b)=>b.createdAt.localeCompare(a.createdAt));
+      alertPanel.hidden=shortOrders.length===0;
+      alertList.replaceChildren(...shortOrders.map(order=>{
+        const item=document.createElement('li');
+        const button=document.createElement('button');
+        const shop=shops.find(candidate=>candidate.id===order.shopId)||{
+          shop:order.shopId,
+          department:order.items.some(orderItem=>orderItem.product)?'Feeds':'Snacks',
+          province:'Unknown'
+        };
+        button.type='button';
+        button.className='short-order-link';
+        button.textContent=`${order.id} · ${new Date(order.createdAt).toLocaleString()}`;
+        button.addEventListener('click',()=>showOrderDetail(shop,order));
+        item.append(button);
+        return item;
+      }));
+    }
+    // Dashboard summary metrics, regional breakdown, and time-series chart.
+    function updateMetrics(){
+      const total=filteredShops.reduce((sum,shop)=>sum+shop.orderCount,0);
+      const regionTotals=filteredShops.reduce((result,shop)=>{
+        result[shop.region]=(result[shop.region]||0)+shop.orderCount;
+        return result;
+      },{});
+      const groups=Object.entries(regionTotals).sort((a,b)=>b[1]-a[1]);
+      document.getElementById('orders').textContent=nf.format(total);
+      document.getElementById('shopCount').textContent=filteredShops.length;
+      document.getElementById('totalShops').textContent=shops.length;
+      document.getElementById('leadingRegion').textContent=groups[0]?.[0]||'—';
+      document.getElementById('leadingOrders').textContent=groups[0]?`${nf.format(groups[0][1])} orders placed`:'No orders in scope';
+      document.getElementById('provinceCount').textContent=new Set(filteredShops.map(shop=>shop.province)).size;
+      document.getElementById('regionPeriod').textContent=orderDateFilter.value?new Date(`${orderDateFilter.value}T00:00:00`).toLocaleDateString('en-US',{month:'short',day:'numeric'}):`Last ${rangeSelect.value} days`;
+      renderRegionBreakdown();
+    }
+    function renderRegionBreakdown(){
+      const regionTotals=filteredShops.reduce((result,shop)=>{
+        result[shop.region]=(result[shop.region]||0)+shop.orderCount;
+        return result;
+      },{});
+      const totals=Object.entries(regionTotals).sort((a,b)=>b[1]-a[1]);
+      const total=totals.reduce((sum,item)=>sum+item[1],0);
+      document.getElementById('regionList').innerHTML=totals.map(([region,count],index)=>`
+        <div class="region-row">
+          <span class="region-label">${escapeHtml(region)}</span>
+          <span class="region-count">${nf.format(count)} orders</span>
+          <div class="region-track">
+            <progress class="region-meter region-color-${index%5}" value="${count}" max="${total||1}" aria-label="${escapeHtml(region)}: ${nf.format(count)} orders"></progress>
+          </div>
+        </div>
+      `).join('');
+    }
+    function drawChart(){
+      const canvas=document.getElementById('revenueChart');
+      const box=canvas.getBoundingClientRect();
+      const dpr=window.devicePixelRatio||1;
+      if(!box.width||!box.height)return;
+
+      canvas.width=box.width*dpr;
+      canvas.height=box.height*dpr;
+      const context=canvas.getContext('2d');
+      context.scale(dpr,dpr);
+
+      const w=box.width;
+      const h=box.height;
+      const padding={left:37,right:8,top:9,bottom:26};
+      const chartWidth=w-padding.left-padding.right;
+      const chartHeight=h-padding.top-padding.bottom;
+      const days=orderDateFilter.value?1:Number(rangeSelect.value);
+      const end=orderDateFilter.value?new Date(`${orderDateFilter.value}T00:00:00`):new Date(today.getFullYear(),today.getMonth(),today.getDate());
+      const start=new Date(end.getFullYear(),end.getMonth(),end.getDate()-(days-1));
+      const previousStart=new Date(start.getFullYear(),start.getMonth(),start.getDate()-days);
+      const shopIds=new Set(filteredShops.map(shop=>shop.id));
+      const current=Array(days).fill(0);
+      const previous=Array(days).fill(0);
+
+      for(const order of orderRecords){
+        if(!shopIds.has(order.shopId))continue;
+        const orderDate=new Date(`${order.date}T00:00:00`);
+        const currentOffset=Math.round((orderDate-start)/86400000);
+        const previousOffset=Math.round((orderDate-previousStart)/86400000);
+        if(currentOffset>=0&&currentOffset<days)current[currentOffset]++;
+        else if(previousOffset>=0&&previousOffset<days)previous[previousOffset]++;
+      }
+
+      const maximum=Math.max(1,...current,...previous);
+      context.font='9px "DM Mono",monospace';
+      context.textAlign='right';
+      context.textBaseline='middle';
+      for(let index=0;index<5;index++){
+        const y=padding.top+chartHeight*index/4;
+        context.strokeStyle='#edf0eb';
+        context.lineWidth=1;
+        context.beginPath();
+        context.moveTo(padding.left,y);
+        context.lineTo(w-padding.right,y);
+        context.stroke();
+        context.fillStyle='#9aa49d';
+        context.fillText(String(Math.ceil(maximum*(4-index)/4)),padding.left-9,y);
+      }
+
+      const labelCount=Math.min(days,7);
+      context.textAlign='center';
+      context.textBaseline='top';
+      for(let index=0;index<labelCount;index++){
+        const dayIndex=labelCount===1?0:Math.round(index*(days-1)/(labelCount-1));
+        const date=new Date(start.getFullYear(),start.getMonth(),start.getDate()+dayIndex);
+        const x=padding.left+(days===1?chartWidth/2:chartWidth*dayIndex/(days-1));
+        context.fillStyle='#9aa49d';
+        context.fillText(date.toLocaleDateString('en-US',{month:'short',day:'numeric'}),x,h-padding.bottom+10);
+      }
+
+      function drawLine(data,color,width,dashed,fill){
+        context.beginPath();
+        data.forEach((value,index)=>{
+          const x=padding.left+(data.length===1?chartWidth/2:chartWidth*index/(data.length-1));
+          const y=padding.top+chartHeight*(1-value/maximum);
+          if(index)context.lineTo(x,y);
+          else context.moveTo(x,y);
+        });
+
+        if(fill){
+          if(data.length===1){
+            context.lineTo(padding.left+chartWidth/2,padding.top+chartHeight);
+          }else{
+            context.lineTo(padding.left+chartWidth,padding.top+chartHeight);
+            context.lineTo(padding.left,padding.top+chartHeight);
+          }
+          context.closePath();
+          const gradient=context.createLinearGradient(0,padding.top,0,h-padding.bottom);
+          gradient.addColorStop(0,'rgba(21,87,166,.18)');
+          gradient.addColorStop(1,'rgba(21,87,166,0)');
+          context.fillStyle=gradient;
+          context.fill();
+          return;
+        }
+
+        context.strokeStyle=color;
+        context.lineWidth=width;
+        context.setLineDash(dashed?[4,4]:[]);
+        context.lineJoin='round';
+        context.lineCap='round';
+        context.stroke();
+        context.setLineDash([]);
+      }
+
+      drawLine(previous,'#e5b9bd',1.5,true,false);
+      drawLine(current,null,2.4,false,true);
+      drawLine(current,'#1557a6',2.4,false,false);
+
+      const lastX=padding.left+(current.length===1?chartWidth/2:chartWidth);
+      const lastY=padding.top+chartHeight*(1-current[current.length-1]/maximum);
+      context.beginPath();
+      context.arc(lastX,lastY,3.5,0,Math.PI*2);
+      context.fillStyle='#fff';
+      context.fill();
+      context.lineWidth=2;
+      context.strokeStyle='#e44752';
+      context.stroke();
+    }
+    new ResizeObserver(drawChart).observe(document.getElementById('revenueChart'));
+    // Export filtered order records using the current shared dashboard filters.
+    function exportCsv(){
+      const selectedDate=orderDateFilter.value;
+      const days=Number(rangeSelect.value);
+      const header=[
+        'Shop',
+        'Shop ID',
+        'Department',
+        'Province',
+        'Region',
+        'Order ID',
+        'Order date',
+        'Placed at',
+        'Products and quantities',
+        'Order total USD',
+        'Status'
+      ];
+      const data=filteredShops.flatMap(shop=>
+        getShopOrders(shop.id,{date:selectedDate,days}).map(order=>[
+          shop.shop,
+          shop.id,
+          shop.department,
+          shop.province,
+          shop.region,
+          order.id,
+          order.date,
+          order.createdAt,
+          order.items.map(formatOrderItem).join('; '),
+          order.total??'Not priced',
+          order.status
+        ])
+      );
+      const csv=[header,...data]
+        .map(row=>row.map(value=>{
+          const text=String(value);
+          const safeText=/^\s*[=+\-@]/.test(text)?`'${text}`:text;
+          return `"${safeText.replaceAll('"','""')}"`;
+        }).join(','))
+        .join('\n');
+      const link=document.createElement('a');
+      const downloadUrl=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+      link.href=downloadUrl;
+      link.download='shop-orders-by-region.csv';
+      document.body.append(link);
+      link.click();
+      link.remove();
+      setTimeout(()=>URL.revokeObjectURL(downloadUrl),1000);
+    }
+    // Shared filter, search, export, and initial-render event wiring.
+    document.getElementById('range').addEventListener('change',renderRows);
+    orderDateFilter.addEventListener('change',renderRows);
+    regionFilter.addEventListener('change',()=>{updateProvinceOptions();renderRows()});
+    provinceFilter.addEventListener('change',renderRows);
+    departmentFilter.addEventListener('change',()=>{updateProvinceOptions();renderRows()});
+    function syncSearchFilters(event){
+      const query=event.currentTarget.value;
+      searchInput.value=query;
+      dispatchSearchInput.value=query;
+      renderRows();
+    }
+    searchInput.addEventListener('input',syncSearchFilters);
+    dispatchSearchInput.addEventListener('input',syncSearchFilters);
+    document.getElementById('statusSelect')?.addEventListener('change',renderRows);
+    document.getElementById('exportTop').addEventListener('click',exportCsv);
+    updateProvinceOptions();renderRows();drawChart();
+    window.DavipelBackend.session().then(async user=>{
+      if(!user)return;
+      await window.DavipelBackend.refreshOrders();
+      await refreshShopCatalog();
+      orderRecords=readOrders();
+      activateProfile(user);
+    }).catch(error=>{
+      if(error.status!==401){
+        document.getElementById('authMessage').textContent=`Could not connect to the Davipel server: ${error.message}`;
+      }
+    });
+  </script>
+</body>
+</html>
